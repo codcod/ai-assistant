@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Pytest cache
+.pytest_cache/
+
+# Ruff
+.ruff_cache/
+
+# IDE
+.vscode/
+.ropeproject
+
+# macOS
+.DS_Store
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# Temporary files
+*.coverage
+
+# Application
+.instance/
+models/

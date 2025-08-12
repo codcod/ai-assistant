@@ -1,0 +1,44 @@
+
+@host = localhost
+@port = 8000
+@base_url = http://{{host}}:{{port}}/api/v1
+
+###
+# Ask a question about documents
+POST {{base_url}}/ask/
+Content-Type: application/json
+
+{
+    "question": "What is the remote work policy?"
+}
+
+###
+# Upload a raw document
+POST {{base_url}}/upload/
+Content-Type: application/json
+
+< raw_document.json
+
+###
+# Upload a PDF document
+POST {{base_url}}/upload/pdf
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="CompanyPolicy.pdf"
+Content-Type: application/pdf
+
+< ./examples/CompanyPolicy.pdf
+--boundary--
+
+###
+# Upload a text document
+POST {{base_url}}/upload/text
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="CompanyPolicy.txt"
+Content-Type: text/plain
+
+< ./examples/CompanyPolicy.txt
+--boundary--
