@@ -20,7 +20,6 @@ Why is this useful?
 - **Scalable**: Handles multiple documents and large text corpora.
 - **Customizable**: Easily extend with new models or document types.
 
-
 ## How does it work?
 
 ### 1. **Document upload**
@@ -56,6 +55,7 @@ powerful approach for context-aware AI responses.
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - Python 3.13+
 - [Just](https://just.systems), a command runner
 
@@ -76,11 +76,13 @@ just run
 ### **3. Upload a document**
 
 **PDF Upload:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/upload/pdf" -F "file=@YourDocument.pdf"
 ```
 
 **Text File Upload:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/upload/text" -F "file=@YourNotes.txt"
 ```
@@ -99,12 +101,14 @@ The assistant retrieves relevant chunks from your uploaded documents, generates
 a context-aware answer, and returns it as a JSON object.
 
 **Example response:**
+
 ```json
 {
   "question": "What is our remote work policy?",
-  "answer": "Our remote work policy allows employees to work from home up to
-  three days per week, subject to manager approval."
+  "answer": "Our remote work policy allows employees to work from home up to three days"
+            "per week, subject to manager approval."
 }
+
 ```
 
 ## Final thoughts
