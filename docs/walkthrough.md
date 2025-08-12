@@ -14,7 +14,12 @@ embeddings, and enables you to ask questions about the uploaded material.  It
 leverages modern NLP and vector search technologies to provide fast, relevant
 answers.
 
----
+Why is this useful?
+
+- **Instant knowledge retrieval**: No more searching through lengthy documents.
+- **Scalable**: Handles multiple documents and large text corpora.
+- **Customizable**: Easily extend with new models or document types.
+
 
 ## How does it work?
 
@@ -38,8 +43,6 @@ relevant document chunks using FAISS, and generates an answer based on the
 retrieved content.  This is known as **Retrieval-Augmented Generation (RAG)**—a
 powerful approach for context-aware AI responses.
 
----
-
 ## Technologies used
 
 - **Litestar**: Fast, async Python web framework for building APIs.
@@ -48,9 +51,7 @@ powerful approach for context-aware AI responses.
 - **NumPy**: Efficient numerical array handling for embeddings.
 - **PDF/Text Processing**: Extracts and chunks document content for analysis.
 
----
-
-## Step-by-step walkthrough
+## Installation
 
 ### Prerequisites
 
@@ -101,19 +102,10 @@ a context-aware answer, and returns it as a JSON object.
 ```json
 {
   "question": "What is our remote work policy?",
-  "answer": "Our remote work policy allows employees to work from home up to three days per week, subject to manager approval."
+  "answer": "Our remote work policy allows employees to work from home up to
+  three days per week, subject to manager approval."
 }
 ```
-
----
-
-## Why is this useful?
-
-- **Instant Knowledge Retrieval**: No more searching through lengthy documents.
-- **Scalable**: Handles multiple documents and large text corpora.
-- **Customizable**: Easily extend with new models or document types.
-
----
 
 ## Final thoughts
 
