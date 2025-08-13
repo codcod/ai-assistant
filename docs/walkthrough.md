@@ -81,13 +81,13 @@ just run
 **PDF Upload:**
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/upload/pdf" -F "file=@YourDocument.pdf"
+curl -X POST "http://localhost:8000/api/v1/upload/pdf" -F "file=@examples/CompanyPolicy.pdf"
 ```
 
 **Text File Upload:**
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/upload/text" -F "file=@YourNotes.txt"
+curl -X POST "http://localhost:8000/api/v1/upload/text" -F "file=@examples/CompanyPolicy.txt"
 ```
 
 ### **3. Ask a question**
