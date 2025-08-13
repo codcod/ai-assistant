@@ -3,8 +3,8 @@
 In today’s fast-paced business environment, the ability to quickly extract
 insights from company documents is invaluable.  Imagine uploading your PDFs or
 text files and instantly being able to ask questions about their
-content—receiving accurate, AI-generated answers in seconds.  That’s exactly what
-this open-source project delivers!
+content—receiving accurate, AI-generated answers in seconds.  Let's build an
+open-source project that would deliver exactly that.
 
 ## What does this project do?
 
@@ -59,21 +59,24 @@ Before you begin, ensure you have the following installed:
 - Python 3.13+
 - [Just](https://just.systems), a command runner
 
-### **1. Clone and set up**
+Download an LLM model:
+
+```bash
+mkdir ../models
+curl -L -o '../models/Phi-3-mini-4k-instruct-q4.gguf' \
+    https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf
+```
+
+### **1. Clone the repository and start the server**
 
 ```bash
 git clone https://github.com/codcod/ai-assistant.git
 cd ai-assistant
 just install
-```
-
-### **2. Start the server**
-
-```bash
 just run
 ```
 
-### **3. Upload a document**
+### **2. Upload a document**
 
 **PDF Upload:**
 
@@ -87,7 +90,7 @@ curl -X POST "http://localhost:8000/api/v1/upload/pdf" -F "file=@YourDocument.pd
 curl -X POST "http://localhost:8000/api/v1/upload/text" -F "file=@YourNotes.txt"
 ```
 
-### **4. Ask a question**
+### **3. Ask a question**
 
 ```bash
 curl -X POST "http://localhost:8000/api/v1/ask" \
@@ -95,7 +98,7 @@ curl -X POST "http://localhost:8000/api/v1/ask" \
      -d '{"question": "What is our remote work policy?"}'
 ```
 
-### **5. Get your answer**
+### **4. Get your answer**
 
 The assistant retrieves relevant chunks from your uploaded documents, generates
 a context-aware answer, and returns it as a JSON object.

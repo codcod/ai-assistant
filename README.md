@@ -8,6 +8,7 @@ You can upload documents, and then ask questions about their content. The
 assistant finds relevant information from your uploads and answers using AI.
 
 How it works:
+
 1. Users upload PDF or text files via HTTP endpoints. The server extracts and
 chunks the text from these files.
 1. Each text chunk is converted into a vector embedding using a
@@ -18,6 +19,7 @@ most relevant document chunks using FAISS, and generates an answer based on the
 retrieved content (using a Retrieval-Augmented Generation approach).
 
 Technologies:
+
 * [Litestar](https://litestar.dev): Web framework for API endpoints.
 * [SentenceTransformers](https://www.sbert.net): For generating text embeddings.
 * [FAISS](https://faiss.ai): For fast similarity search over embeddings.
