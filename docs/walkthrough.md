@@ -31,14 +31,14 @@ from these files, preparing them for further processing.
 ### 2. **Embedding & Storage**
 
 Each chunk of text is converted into a vector embedding using
-[SentenceTransformers](https://www.sbert.net/).  These embeddings are stored in
-a [FAISS](https://faiss.ai/) vector database, enabling efficient similarity
-search.
+[SentenceTransformers](https://www.sbert.net/).  These embeddings are stored in a
+[ChromaDB](https://www.trychroma.com/) vector database, which handles persistence
+and enables efficient similarity search.
 
 ### 3. **Question answering (RAG)**
 
 When you ask a question, the system embeds your query, searches for the most
-relevant document chunks using FAISS, and generates an answer based on the
+relevant document chunks using ChromaDB, and generates an answer based on the
 retrieved content.  This is known as **Retrieval-Augmented Generation (RAG)**—a
 powerful approach for context-aware AI responses.
 
@@ -46,8 +46,8 @@ powerful approach for context-aware AI responses.
 
 - **Litestar**: Fast, async Python web framework for building APIs.
 - **SentenceTransformers**: State-of-the-art text embedding models.
-- **FAISS**: High-performance vector similarity search library.
-- **NumPy**: Efficient numerical array handling for embeddings.
+- **ChromaDB**: The AI-native database for embeddings, handling storage and
+search.
 - **PDF/Text Processing**: Extracts and chunks document content for analysis.
 
 ## Installation
@@ -92,6 +92,8 @@ curl -X POST "http://localhost:8000/api/v1/upload/text" -F "file=@examples/Compa
 
 ### **3. Ask a question**
 
+Now, ask a question related to the content of your uploaded document(s).
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/ask" \
      -H "Content-Type: application/json" \
@@ -111,7 +113,22 @@ a context-aware answer, and returns it as a JSON object.
   "answer": "Our remote work policy allows employees to work from home up to three days"
             "per week, subject to manager approval."
 }
+```
 
+### **6. Manage the document store**
+
+You can also list all the documents currently in the store or clear them completely.
+
+**List documents:**
+
+```bash
+curl -X GET "http://localhost:8000/api/v1/list"
+```
+
+**Clear all documents:**
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/reset"
 ```
 
 ## Final thoughts
