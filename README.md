@@ -1,4 +1,4 @@
-# AI Assistant
+# AI Document Assistant
 
 This project is an AI-powered assistant that enables users to upload documents
 (PDF or text), automatically processes and stores their content as vector

@@ -1,7 +1,7 @@
 [project]
-name = "assistant"
-version = "0.1.0"
-description = "Add your description here"
+name = "ai-doc-assistant"
+version = "0.2.0"
+description = "AI-powered documentation assistant"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
