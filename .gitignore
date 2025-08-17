@@ -34,3 +34,6 @@ wheels/
 # Application
 .instance/
 models/
+
+# Articles
+docs/article-*.md

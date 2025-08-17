@@ -5,15 +5,16 @@ This module defines the web API endpoints for:
 - Asking questions about uploaded documents
 - Uploading PDF and text files
 - Processing and storing document content
+- Listing stored documents
+- Clearing all documents from the store
 """
 
-from litestar import Request, post
+from litestar import Request, get, post
 from litestar.datastructures import UploadFile
 from pydantic import BaseModel
 
-from .embeddings import add_document
+from .embeddings import add_document, clear_documents, list_documents
 from .rag import rag_answer
-from .storage import save_store
 from .utils import chunk_text, extract_text_from_pdf, save_upload
 
 
@@ -65,8 +66,7 @@ async def upload_pdf(request: Request) -> dict:
     text = extract_text_from_pdf(path)
     chunks = chunk_text(text)
     for chunk in chunks:
-        add_document(chunk)
-    save_store()
+        add_document(chunk, metadata={'source': file.filename})
     return {'status': 'ok', 'chunks_added': len(chunks)}
 
 
@@ -93,8 +93,7 @@ async def upload_text(request: Request) -> dict:
         text = f.read()
     chunks = chunk_text(text)
     for chunk in chunks:
-        add_document(chunk)
-    save_store()
+        add_document(chunk, metadata={'source': file.filename})
     return {'status': 'ok', 'chunks_added': len(chunks)}
 
 
@@ -113,3 +112,37 @@ async def upload(data: UploadRequest) -> dict:
     """
     add_document(data.text)
     return {'status': 'ok', 'message': 'Document added'}
+
+
+@get('/list')
+async def list_docs(limit: int = 50) -> dict:
+    """
+    List stored documents with metadata and content previews.
+
+    Retrieves a list of documents currently stored in the vector database
+    along with their metadata and content previews.
+
+    Args:
+        limit (int, optional): Maximum number of documents to return. Defaults to 50.
+
+    Returns:
+        dict: Response containing document count and list of documents.
+    """
+    docs = list_documents(limit=limit)
+    return {'count': len(docs), 'documents': docs}
+
+
+@post('/reset')
+async def reset_docs() -> dict:
+    """
+    Clear all documents from the vector store.
+
+    Removes all documents and their embeddings from the collection.
+    This operation cannot be undone.
+
+    Returns:
+        dict: Response indicating the operation completed.
+    """
+    print('Clearing all documents from Chroma store')
+    clear_documents()
+    return {'status': 'ok', 'message': 'All documents cleared'}

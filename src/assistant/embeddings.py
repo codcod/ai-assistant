@@ -2,69 +2,94 @@
 Vector embeddings module for document similarity search.
 
 This module provides functionality for:
-- Adding documents to a vector store using FAISS
+- Adding documents to a vector store using ChromaDB
 - Converting text to embeddings using SentenceTransformers
 - Searching for similar documents based on semantic similarity
 """
 
-import faiss
-import numpy as np
-from sentence_transformers import SentenceTransformer
+import uuid
 
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
+from .storage import get_collection
 
-index = faiss.IndexFlatL2(384)  # type: ignore[attr-defined]
-documents: list[str] = []
+collection = get_collection()
 
 
-def add_document(text: str) -> None:
+def add_document(text: str, metadata: dict | None = None) -> None:
     """
     Add a document to the vector store.
 
-    Converts the input text to a vector embedding and stores it in the FAISS index
-    along with the original text for retrieval.
+    Converts the input text to a vector embedding and stores it in the ChromaDB
+    collection along with the original text for retrieval.
 
     Args:
         text (str): The document text to add to the vector store.
+        metadata (dict | None, optional): Additional metadata to store with the
+        document.
     """
-    vector = embedder.encode([text])
-    # Ensure vector is 2D array with correct shape for FAISS
-    vector = np.array(vector, dtype=np.float32)
-    if vector.ndim == 1:
-        vector = vector.reshape(1, -1)
-    # FAISS add method signature: add(x: np.ndarray) -> None
-    index.add(vector)  #  type: ignore pylint: disable=no-value-for-parameter
-    documents.append(text)
+    doc_id = str(uuid.uuid4())
+    collection.add(ids=[doc_id], documents=[text], metadatas=[metadata or {}])
 
 
 def search(query: str, top_k: int = 3) -> list[str]:
     """
     Search for similar documents based on semantic similarity.
 
-    Converts the query to a vector embedding and searches the FAISS index
+    Converts the query to a vector embedding and searches the ChromaDB collection
     for the most similar documents.
 
     Args:
         query (str): The search query text.
-        top_k (int, optional): Maximum number of similar documents to return. Defaults to 3.
+        top_k (int, optional): Maximum number of similar documents to return.
+        Defaults to 3.
 
     Returns:
-        List[str]: List of the most similar document texts, ordered by similarity.
+        List[str]: List of the most similar document texts, ordered by
+        similarity.
     """
-    if len(documents) == 0:
+    results = collection.query(query_texts=[query], n_results=top_k)
+    docs = results['documents']
+    return docs[0] if docs else []
+
+
+def list_documents(limit: int = 50):
+    """
+    List stored documents and metadata.
+
+    Retrieves documents from the collection with their metadata and provides
+    a preview of the document content.
+
+    Args:
+        limit (int, optional): Maximum number of documents to return. Defaults
+        to 50.
+
+    Returns:
+        list[dict]: List of documents with id, metadata, and content preview.
+    """
+    data = collection.get()
+    if not data:
         return []
 
-    vector = embedder.encode([query])
-    # Ensure vector is 2D array with correct shape for FAISS
-    vector = np.array(vector, dtype=np.float32)
-    if vector.ndim == 1:
-        vector = vector.reshape(1, -1)
+    ids = (data.get('ids') or [])[:limit]
+    docs = (data.get('documents') or [])[:limit]
+    metas = (data.get('metadatas') or [])[:limit]
+    return [
+        {'id': i, 'metadata': m, 'preview': (d[:100] + '...') if len(d) > 100 else d}
+        for i, d, m in zip(ids, docs, metas)
+    ]
 
-    # Limit top_k to available documents
-    top_k = min(top_k, len(documents))
 
-    # FAISS search method signature:
-    # search(x: np.ndarray, k: int) -> Tuple[np.ndarray, np.ndarray]
-    # pylint: disable=no-value-for-parameter
-    _, indices = index.search(vector, top_k)  #  type:ignore
-    return [documents[i] for i in indices[0] if i < len(documents)]
+def clear_documents():
+    """
+    Clear all documents from the vector store.
+
+    Removes all documents and their embeddings from the ChromaDB collection.
+    This operation cannot be undone.
+    """
+    data = collection.get()
+    doc_ids = data.get('ids', [])
+
+    # No documents to clear - collection is already empty
+    if not doc_ids:
+        return
+
+    collection.delete(ids=doc_ids)

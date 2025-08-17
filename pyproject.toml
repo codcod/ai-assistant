@@ -5,10 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "faiss-cpu>=1.11.0.post1",
+    "chromadb>=1.0.17",
     "litestar>=2.16.0",
     "llama-cpp-python>=0.3.15",
-    "numpy>=2.3.2",
     "pydantic>=2.11.7",
     "pypdf>=5.9.0",
     "sentence-transformers>=5.1.0",

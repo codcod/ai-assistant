@@ -5,6 +5,8 @@ This module provides functionality for:
 - Retrieving relevant document chunks based on queries
 - Generating context-aware answers using LLM
 - Combining vector search with text generation
+
+The logic is unchanged compared to before, just uses Chroma search.
 """
 
 from .embeddings import search

@@ -42,3 +42,11 @@ Content-Type: text/plain
 
 < ./examples/CompanyPolicy.txt
 --boundary--
+
+###
+# See what’s in Chroma
+GET {{base_url}}/list?limit=5
+
+###
+# Wipe the knowledge base (UNSAFE!)
+POST {{base_url}}/reset/
